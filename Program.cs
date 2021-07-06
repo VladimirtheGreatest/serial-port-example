@@ -25,8 +25,8 @@ namespace SerialPortExample
                 Console.WriteLine("   {0}", s);
             }
 
-            // Allow the user to set the appropriate properties.  
-            //_serialPort.PortName = SetPortName(_serialPort.PortName);
+            // Allow the user to set the appropriate properties. I can change to my port for arduino as COM3
+            _serialPort.PortName = SetPortName(_serialPort.PortName);
             //_serialPort.BaudRate = SetPortBaudRate(_serialPort.BaudRate);
             //_serialPort.Parity = SetPortParity(_serialPort.Parity);
             //_serialPort.DataBits = SetPortDataBits(_serialPort.DataBits);
@@ -41,7 +41,7 @@ namespace SerialPortExample
             _continue = true;
             readThread.Start();
 
-            Console.Write("Name: ");
+            Console.Write("Press A to turn on the LED, anything else to turn it off: ");
             name = Console.ReadLine();
 
             Console.WriteLine("Type QUIT to exit");
@@ -56,8 +56,14 @@ namespace SerialPortExample
                 }
                 else
                 {
-                    _serialPort.WriteLine(
-                        String.Format("<{0}>: {1}", name, message));
+                    if (stringComparer.Equals("A", message))
+                    {
+                        _serialPort.Write("A");
+                    }
+                    else
+                    {
+                        _serialPort.Write("B");
+                    }
                 }
             }
 
