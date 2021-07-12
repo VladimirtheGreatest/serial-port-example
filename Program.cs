@@ -34,6 +34,7 @@ namespace SerialPortExample
             //_serialPort.Handshake = SetPortHandshake(_serialPort.Handshake);
 
             // Set the read/write timeouts  
+            //The read time-out value was originally set at 500 milliseconds in the Win32 Communications API. This property allows you to set this value. The time-out can be set to any value greater than zero, or set to InfiniteTimeout, in which case no time-out occurs. InfiniteTimeout is the default.
             _serialPort.ReadTimeout = 50000;
             _serialPort.WriteTimeout = 50000;
 
