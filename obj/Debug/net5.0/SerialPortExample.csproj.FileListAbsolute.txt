@@ -13,7 +13,6 @@ C:\Users\User\source\repos\SerialPortExample\bin\Debug\net5.0\runtimes\osx-x64\n
 C:\Users\User\source\repos\SerialPortExample\bin\Debug\net5.0\runtimes\linux\lib\netstandard2.0\System.IO.Ports.dll
 C:\Users\User\source\repos\SerialPortExample\bin\Debug\net5.0\runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll
 C:\Users\User\source\repos\SerialPortExample\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.IO.Ports.dll
-C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.csprojAssemblyReference.cache
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.AssemblyInfoInputs.cache
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.AssemblyInfo.cs
@@ -23,3 +22,4 @@ C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\ref\SerialPortExample.dll
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.pdb
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.genruntimeconfig.cache
+C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.csproj.AssemblyReference.cache

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Text;
 using System.Threading;
 
 namespace SerialPortExample
@@ -10,13 +11,19 @@ namespace SerialPortExample
         static SerialPort _serialPort;
         static void Main(string[] args)
         {
+            //Baud Rate 9600 BPS
+            //Stop Bits 1
+            //Word Length 8 Bits
+            //Parity None
+
+
             string name;
             string message;
             StringComparer stringComparer = StringComparer.OrdinalIgnoreCase;
-            Thread readThread = new Thread(Read);
+          //  Thread readThread = new Thread(Read);
 
-            // Create a new SerialPort object with default settings.  
-            _serialPort = new SerialPort();
+           // Create a new SerialPort object with default settings.
+           _serialPort = new SerialPort();
 
 
             Console.WriteLine("Available Ports:");
@@ -25,64 +32,120 @@ namespace SerialPortExample
                 Console.WriteLine("   {0}", s);
             }
 
-            // Allow the user to set the appropriate properties. I can change to my port for arduino as COM3
-            _serialPort.PortName = SetPortName(_serialPort.PortName);
-            //_serialPort.BaudRate = SetPortBaudRate(_serialPort.BaudRate);
-            //_serialPort.Parity = SetPortParity(_serialPort.Parity);
-            //_serialPort.DataBits = SetPortDataBits(_serialPort.DataBits);
-            //_serialPort.StopBits = SetPortStopBits(_serialPort.StopBits);
-            //_serialPort.Handshake = SetPortHandshake(_serialPort.Handshake);
+            // Allow the user to set the appropriate properties. I can change to my port for arduino as COM3, COM1 is a default port
 
-            // Set the read/write timeouts  
-            _serialPort.ReadTimeout = 50000;
-            _serialPort.WriteTimeout = 50000;
+            // _serialPort.PortName = SetPortName(_serialPort.PortName);
+            // _serialPort.BaudRate = SetPortBaudRate(_serialPort.BaudRate);
+            // _serialPort.Parity = SetPortParity(_serialPort.Parity);
+            // _serialPort.DataBits = SetPortDataBits(_serialPort.DataBits);
+            // _serialPort.StopBits = SetPortStopBits(_serialPort.StopBits);
+            // _serialPort.Handshake = SetPortHandshake(_serialPort.Handshake);
 
+
+
+            _serialPort.PortName = "COM4";
+            _serialPort.ReadTimeout = -1;
+            _serialPort.WriteTimeout = -1;
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
             _serialPort.Open();
+            //_serialPort.Write("B");
+
+
+            var isOpen = _serialPort.IsOpen;
+
             _continue = true;
-            readThread.Start();
+            //  readThread.Start();
 
-            Console.Write("Press A to turn on the LED, anything else to turn it off: ");
-            name = Console.ReadLine();
+            //'STX' STN 'DC1' 'ETX' BCC   02 31 11 03 47
+            //   b) The everywhere used BCC(= Block Check Character) is calculated as sum of all bytes already read
 
-            Console.WriteLine("Type QUIT to exit");
+            //  4.Hex - Codes for used control characters:
+            //SOH 0x01
+            // STX 0x02
+            // ETX 0x03
+            // ENQ 0x05
+            // ACK 0x06
+            // DLE 0x10
+            // DC1 0x11
+            // DC2 0x12
+            // DC3 0x13
+            // DC4 0x14
+            // NAK 0x15
+            // CAN 0x18
+            // STN 0x31
 
-            while (_continue)
-            {
-                message = Console.ReadLine();
+           // _serialPort.Write("B");
 
-                if (stringComparer.Equals("quit", message))
-                {
-                    _continue = false;
-                }
-                else
-                {
-                    if (stringComparer.Equals("A", message))
-                    {
-                        _serialPort.Write("A");
-                    }
-                    else
-                    {
-                        _serialPort.Write("B");
-                    }
-                }
-            }
+            //I can either use a string
+            string _startMachineString = "\x02\x31\x11\x03\x47";
+            _serialPort.Write(_startMachineString);
 
-            readThread.Join();
+            //encoded bytes
+            //byte[] _startMachine = Encoding.GetEncoding("ASCII").GetBytes("DC1");
+            byte[] _mass = Encoding.GetEncoding("ASCII").GetBytes("STX STN DC1 ETX BCC");
+            _serialPort.Write(_mass, 0, _mass.Length);
+
+            //or this
+            var data = new byte[] { 02, 31, 11, 03, 47};
+            var dataString = new byte[] { (byte)'D', (byte)'C', (byte)'1' };
+
+
+            byte[] startMachineHexBytes = new byte[] { 0x02 , 0x31, 0x11, 0x03, 0x47 };
+           _serialPort.Write(startMachineHexBytes, 0, startMachineHexBytes.Length);
+
+            var command = 0x02;
+            var change_screen = BitConverter.GetBytes(command);
+
+            //sp.Write(change_screen, 0, change_screen.Length);
+
+            //while (_continue)
+            //{
+            //    message = Console.ReadLine();
+
+            //    if (stringComparer.Equals("quit", message))
+            //    {
+            //        _continue = false;
+            //    }
+            //    else
+            //    {
+            //        if (stringComparer.Equals("A", message))
+            //        {
+            //            _serialPort.Write("A");
+            //            Console.WriteLine("A presses");
+            //        }
+            //        else
+            //        {
+            //            _serialPort.Write("B");
+            //            Console.WriteLine("B presses");
+            //        }
+            //    }
+            //}
+
+            // readThread.Join();
             _serialPort.Close();
         }
-
-        public static void Read()
+        private static void port_DataReceived(object sender,
+  SerialDataReceivedEventArgs e)
         {
-            while (_continue)
-            {
-                try
-                {
-                    string message = _serialPort.ReadLine();
-                    Console.WriteLine(message);
-                }
-                catch (TimeoutException) { }
-            }
+            // Show all the incoming data in the port's buffer
+ 
+            var dataReceived = _serialPort.ReadExisting();
+            Console.WriteLine(dataReceived);
         }
+
+
+        //public static void Read()
+        //{
+        //    while (_continue)
+        //    {
+        //        try
+        //        {
+        //            string message = _serialPort.ReadLine();
+        //            Console.WriteLine(message);
+        //        }
+        //        catch (TimeoutException) { }
+        //    }
+        //}
 
         public static string SetPortName(string defaultPortName)
         {
