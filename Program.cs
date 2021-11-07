@@ -34,12 +34,19 @@ namespace SerialPortExample
 
             // Allow the user to set the appropriate properties. I can change to my port for arduino as COM3, COM1 is a default port
 
+<<<<<<< HEAD
             // _serialPort.PortName = SetPortName(_serialPort.PortName);
             // _serialPort.BaudRate = SetPortBaudRate(_serialPort.BaudRate);
             // _serialPort.Parity = SetPortParity(_serialPort.Parity);
             // _serialPort.DataBits = SetPortDataBits(_serialPort.DataBits);
             // _serialPort.StopBits = SetPortStopBits(_serialPort.StopBits);
             // _serialPort.Handshake = SetPortHandshake(_serialPort.Handshake);
+=======
+            // Set the read/write timeouts  
+            //The read time-out value was originally set at 500 milliseconds in the Win32 Communications API. This property allows you to set this value. The time-out can be set to any value greater than zero, or set to InfiniteTimeout, in which case no time-out occurs. InfiniteTimeout is the default.
+            _serialPort.ReadTimeout = 50000;
+            _serialPort.WriteTimeout = 50000;
+>>>>>>> c867016d7bbcb04e620ac21b36e257b0030ed838
 
 
 
