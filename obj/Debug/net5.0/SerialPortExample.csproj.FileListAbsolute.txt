@@ -22,4 +22,3 @@ C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\ref\SerialPortExample.dll
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.pdb
 C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.genruntimeconfig.cache
-C:\Users\User\source\repos\SerialPortExample\obj\Debug\net5.0\SerialPortExample.csproj.AssemblyReference.cache

@@ -51,7 +51,7 @@ namespace SerialPortExample
             //  _serialPort.ReadTimeout = 50000;
             //  _serialPort.WriteTimeout = 50000;
          //   Thread readThread = new Thread(Read);
-            _serialPort.PortName = "COM6";
+            _serialPort.PortName = "COM7";
             _serialPort.ReadTimeout = -1;
             _serialPort.WriteTimeout = -1;
             _serialPort.BaudRate = 9600;
@@ -66,7 +66,7 @@ namespace SerialPortExample
             var isOpen = _serialPort.IsOpen;
 
             _continue = true;
-           //  readThread.Start();
+            //  readThread.Start();
 
             //'STX' STN 'DC1' 'ETX' BCC   02 31 11 03 47
             //   b) The everywhere used BCC(= Block Check Character) is calculated as sum of all bytes already read
@@ -124,8 +124,8 @@ namespace SerialPortExample
             // _serialPort.Write(_getMachineStatus);
             // _serialPort.Write(_stopMachineString);
 
-            //byte[] _startMachine = new byte[] { 0x02, 0x31, 0x11, 0x03, 0x47 };   //works
-            //_serialPort.Write(_startMachine, 0, _startMachine.Length);
+            byte[] _startMachine = new byte[] { 0x02, 0x31, 0x11, 0x03, 0x47 };   //works
+            _serialPort.Write(_startMachine, 0, _startMachine.Length);
 
             //byte[] _stopMachine = new byte[] { 0x02, 0x31, 0x12, 0x03, 0x48 };   //works
             //_serialPort.Write(_stopMachine, 0, _stopMachine.Length);
@@ -138,8 +138,8 @@ namespace SerialPortExample
             //  _serialPort.Write(_getDenominations, 0, _getDenominations.Length);
 
 
-            byte[] _getBatchTotal = new byte[] { 0x02, 0x31, 0x14, 0x03, 0x4a };
-            _serialPort.Write(_getBatchTotal, 0, _getBatchTotal.Length);
+          // byte[] _getBatchTotal = new byte[] { 0x02, 0x31, 0x14, 0x03, 0x4a };
+           // _serialPort.Write(_getBatchTotal, 0, _getBatchTotal.Length);
 
             //  byte[] _getMemory = new byte[] { 0x02, 0x31, 0x13, 0x03, 0x49 };
             // _serialPort.Write(_getMemory, 0, _getMemory.Length);
@@ -162,7 +162,7 @@ namespace SerialPortExample
 
             //for some reason the event is not triggered so I will readdata programatically, so I will write command to serial port and immediatelly will read the message
             var count = _serialPort.BytesToRead;
-            if (count == 85) //simple check to find out if we managed to get back batch count
+            if (/*count == 85*/true) //simple check to find out if we managed to get back batch count
             {
                 var batchTotal = new BatchTotal();
                 var bytes = new byte[count];
@@ -177,7 +177,7 @@ namespace SerialPortExample
 
                 var hexFinal = hexStringUpdated.Take(hexStringUpdated.Count - 2).ToList();  //remove etx and bcc
 
-                var quantityIndex = hexFinal.IndexOf("36"); //helps us to find a DOLLAR SIGN seperation for quantity
+                var quantityIndex = hexFinal.IndexOf("24"); //helps us to find a DOLLAR SIGN seperation for quantity
 
                 //they will go in this order, we know the order ahead so we can do this programatically
                 //0.50 
@@ -190,14 +190,16 @@ namespace SerialPortExample
                 //0.05
                 //Quantities lists
                 batchTotal.QuantityTotal = hexFinal.GetRange(quantityIndex + 1, 8);
+
+                batchTotal.QuantityTotal = hexFinal.GetRange(quantityIndex + 1, 8);
                 batchTotal.FiftyCents = hexFinal.GetRange(0, 8).ToList();
                 batchTotal.TwentyCents = hexFinal.GetRange(8, 8).ToList();
-                batchTotal.TwoPounds = hexFinal.GetRange(16, 8).ToList();
-                batchTotal.TwoCents = hexFinal.GetRange(24, 8).ToList();
-                batchTotal.TenCents = hexFinal.GetRange(32, 8).ToList();
-                batchTotal.OnePounds = hexFinal.GetRange(40, 8).ToList();
-                batchTotal.OneCents = hexFinal.GetRange(48, 8).ToList();
-                batchTotal.FiveCents = hexFinal.GetRange(56, 8).ToList();
+                batchTotal.TwoPounds = hexFinal.GetRange(17, 8).ToList();
+                batchTotal.TwoCents = hexFinal.GetRange(25, 8).ToList();
+                batchTotal.TenCents = hexFinal.GetRange(33, 8).ToList();
+                batchTotal.OnePounds = hexFinal.GetRange(41, 8).ToList();
+                batchTotal.OneCents = hexFinal.GetRange(49, 8).ToList();
+                batchTotal.FiveCents = hexFinal.GetRange(57, 8).ToList();
 
                 //Total sum calculated from quantities
 
